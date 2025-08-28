@@ -1,6 +1,6 @@
-Trade-X (Zerodha Clone) 🚀
+Trade-X 🚀
 
-A fullstack clone of the Zerodha trading platform, built as a learning project.  
+A fullstack clone inspired by Zerodha trading platform with additional AI based features, built as a learning project.  
 **Note:** This is a demo/clone project and not affiliated with Zerodha or TradeX.
 
 Live Demo
