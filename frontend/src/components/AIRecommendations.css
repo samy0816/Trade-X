@@ -1,0 +1,30 @@
+.ai-card{
+  margin:32px 0;
+  padding:20px;
+  border-radius:12px;
+  background:linear-gradient(180deg,#ffffff,#fbfdff);
+  box-shadow:0 6px 18px rgba(14,30,37,0.08);
+  border:1px solid rgba(27,40,59,0.04);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+.ai-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.ai-title{
+  display:flex;align-items:center;gap:12px;font-weight:600;color:#0f1724;font-size:1rem
+}
+.ai-badge{width:36px;height:36px;border-radius:8px;background:#eef6ff;display:inline-flex;align-items:center;justify-content:center;color:#0366d6;font-weight:700}
+.ai-actions{display:flex;gap:8px}
+.btn{padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+.btn-primary{background:#0366d6;color:white}
+.btn-ghost{background:transparent;border:1px solid #e6eefc;color:#0366d6}
+.ai-summary{margin-top:14px;color:#1f2937;line-height:1.5}
+.ai-list{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.ai-item{background:#fff;border:1px solid #eef3ff;padding:10px 12px;border-radius:8px;color:#0b1220;display:flex;align-items:center;gap:10px}
+.ai-item .dot{width:10px;height:10px;border-radius:50%;background:#0366d6}
+.loading{margin-top:12px;color:#64748b}
+.copy-btn{background:#f8fafc;border:1px solid #e6eefc;padding:6px 10px;border-radius:8px;cursor:pointer}
+.small-muted{color:#64748b;font-size:0.95rem}
