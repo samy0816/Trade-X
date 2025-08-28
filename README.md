@@ -50,7 +50,6 @@ cd Trade-X
 
 cd backend
 npm install
-# Create a .env file with your MongoDB URI and Gemini API key
 npm start
 
 3. Frontend Setup
