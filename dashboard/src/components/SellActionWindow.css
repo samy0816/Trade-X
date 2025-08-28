@@ -1,0 +1,88 @@
+#sell-window {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  width: 350px;
+  padding: 24px 24px 16px 24px;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  z-index: 1000;
+}
+
+#sell-window .regular-order {
+  margin-bottom: 18px;
+}
+
+#sell-window .inputs {
+  display: flex;
+  gap: 16px;
+}
+
+#sell-window fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  min-width: 100px;
+}
+
+#sell-window legend {
+  font-size: 0.9em;
+  color: #888;
+  padding: 0 4px;
+}
+
+#sell-window input[type="number"] {
+  width: 80px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  margin-top: 4px;
+}
+
+#sell-window .buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+#sell-window .buttons span {
+  color: #1a7f37;
+  font-weight: 500;
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+#sell-window .btn {
+  padding: 7px 18px;
+  border-radius: 4px;
+  font-size: 1em;
+  margin-left: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+#sell-window .btn-blue {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  transition: background 0.2s;
+}
+
+#sell-window .btn-blue:hover {
+  background: #b71c1c;
+}
+
+#sell-window .btn-grey {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+#sell-window .btn-grey:hover {
+  background: #e0e0e0;
+}
