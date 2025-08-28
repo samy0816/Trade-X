@@ -47,22 +47,23 @@ git clone https://github.com/samy0816/Trade-X.git
 cd Trade-X
 ```
 2. Backend Setup
-
+```bash
 cd backend
 npm install
 npm start
-
+```
 3. Frontend Setup
+```bash
 cd ../frontend
 npm install
 npm start
-
-4. Dashboard Setup
-
+```
+5. Dashboard Setup
+```bash
 cd ../dashboard
 npm install
 npm start
-
+```
 
  Deployment
 Frontend & Dashboard: Deployed on Netlify
