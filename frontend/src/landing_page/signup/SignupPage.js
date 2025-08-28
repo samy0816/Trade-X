@@ -23,8 +23,8 @@ function SignupPage() {
             const response = await axios.post(`https://trade-x-iaaz.onrender.com${endpoint}`, formData);
             
             if (response.data.message.includes('successful')) {
-                // Redirect to dashboard (different app on port 3000)
-                window.location.href = 'http://localhost:3000';
+                // Redirect to dashboard live URL
+                window.location.href = 'https://zesty-liger-ed149b.netlify.app/';
             }
         } catch (error) {
             alert(error.response?.data?.message || 'An error occurred');

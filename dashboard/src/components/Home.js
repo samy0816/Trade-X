@@ -8,12 +8,12 @@ const Home = () => {
   const handleLogout = async () => {
     try {
   await axios.post('https://trade-x-iaaz.onrender.com/logout');
-      // Redirect to frontend (port 3001)
-  window.location.href = 'http://localhost:3001'; // Update this if your frontend is also deployed
+  // Redirect to frontend live URL
+  window.location.href = 'https://steady-genie-711707.netlify.app/';
     } catch (error) {
       console.error('Logout error:', error);
       // Even if logout fails, redirect to frontend
-      window.location.href = 'http://localhost:3001';
+  window.location.href = 'https://steady-genie-711707.netlify.app/';
     }
   };
 
