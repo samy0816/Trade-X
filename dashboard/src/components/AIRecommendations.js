@@ -57,7 +57,7 @@ const AIRecommendations = ({ holdings, watchlist = [] }) => {
     setRecommendations([]);
     setSummary("");
     try {
-  const res = await axios.post("http://localhost:3002/ai/recommendations", { holdings, watchlist });
+  const res = await axios.post("https://trade-x-iaaz.onrender.com/ai/recommendations", { holdings, watchlist });
       const parsed = parseModelOutput(res.data.recommendations || '');
       setSummary(parsed.summary);
       setRecommendations(parsed.recs);

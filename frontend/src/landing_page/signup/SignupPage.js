@@ -20,7 +20,7 @@ function SignupPage() {
         e.preventDefault();
         try {
             const endpoint = isLogin ? '/login' : '/signup';
-            const response = await axios.post(`http://localhost:3002${endpoint}`, formData);
+            const response = await axios.post(`https://trade-x-iaaz.onrender.com${endpoint}`, formData);
             
             if (response.data.message.includes('successful')) {
                 // Redirect to dashboard (different app on port 3000)
