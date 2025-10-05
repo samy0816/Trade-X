@@ -24,7 +24,7 @@ function SignupPage() {
             
             if (response.data.message.includes('successful')) {
                 // Redirect to dashboard live URL
-                window.location.href = 'http://localhost:3001';
+                window.location.href = 'https://zesty-liger-ed149b.netlify.app/';
             }
         } catch (error) {
             alert(error.response?.data?.message || 'An error occurred');
