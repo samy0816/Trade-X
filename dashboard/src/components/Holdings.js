@@ -49,8 +49,8 @@ const Holdings = () => {
   return (
     <>
       <h3 className="title">Holdings ({allHoldings.length})</h3>
-
-  <AIRecommendations holdings={allHoldings} watchlist={watchlist} />
+      
+      <AIRecommendations holdings={allHoldings} watchlist={watchlist} />
 
       <div className="order-table">
         <table>

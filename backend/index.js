@@ -17,6 +17,7 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { UserModel } = require('./model/UserModel');
+const { getRAGEnhancedRecommendations } = require('./services/ragService');
 
 // app.get("/addHoldings", (req, res) => {
 //   let tempHoldings=[
@@ -97,6 +98,88 @@ Return plain text with the labels 'SUMMARY:' and 'RECOMMENDATIONS:' so the front
   } catch (error) {
      console.error('AI Recommendation Error:', error, error.stack);
     res.status(500).json({ message: 'AI recommendation error', error: error.message });
+  }
+});
+
+// RAG-Enhanced AI Recommendations
+app.post('/ai/rag-recommendations', async (req, res) => {
+  try {
+    const { holdings, watchlist, query } = req.body;
+    const result = await getRAGEnhancedRecommendations(holdings, watchlist, query);
+    res.json(result);
+  } catch (error) {
+    console.error('RAG AI Recommendation Error:', error);
+    res.status(500).json({ message: 'RAG AI recommendation error', error: error.message });
+  }
+});
+
+// Market Sentiment Analysis
+app.post('/ai/market-sentiment', async (req, res) => {
+  try {
+    const { stocks } = req.body;
+    const prompt = `Analyze current market sentiment for: ${stocks.join(', ')}
+    
+    Provide:
+    OVERALL_SENTIMENT: [Bullish/Bearish/Neutral] (confidence %)
+    KEY_DRIVERS: 3-4 main factors
+    STOCK_SPECIFIC: Individual sentiment
+    RECOMMENDATION: Market timing advice`;
+    
+    const apiKey = process.env.VITE_GEMINI_API_KEY;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    });
+    
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No sentiment data available.";
+    res.json({ sentiment: text });
+  } catch (error) {
+    console.error('Market Sentiment Error:', error);
+    res.status(500).json({ message: 'Market sentiment error', error: error.message });
+  }
+});
+
+// Smart Trade Analysis
+app.post('/ai/trade-analysis', async (req, res) => {
+  try {
+    const { stock, tradeType, userPortfolio } = req.body;
+    const prompt = `Analyze ${stock} for ${tradeType} decision.
+    
+    User Portfolio: ${JSON.stringify(userPortfolio)}
+    
+    Provide:
+    TRADE_SIGNAL: [Strong Buy/Buy/Hold/Sell/Strong Sell] (confidence 1-10)
+    ENTRY_STRATEGY: Optimal entry timing
+    RISK_ANALYSIS: Key risks
+    POSITION_SIZING: Recommended % of portfolio
+    STOP_LOSS: Suggested levels
+    PROFIT_TARGETS: Target prices
+    MARKET_CONTEXT: Current market impact
+    PORTFOLIO_IMPACT: Effect on overall portfolio`;
+    
+    const apiKey = process.env.VITE_GEMINI_API_KEY;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    });
+    
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Analysis not available.";
+    res.json({ analysis: text });
+  } catch (error) {
+    console.error('Trade Analysis Error:', error);
+    res.status(500).json({ message: 'Trade analysis error', error: error.message });
   }
 });
 
