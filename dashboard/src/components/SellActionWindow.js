@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GeneralContext from "./GeneralContext";
@@ -7,24 +7,25 @@ import "./BuyActionWindow.css";
 const SellActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
+  const generalContext = useContext(GeneralContext);
 
-  const handleSellClick = () => {
-  axios.post("https://trade-x-iaaz.onrender.com/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "SELL",
-    });
-
-    if (GeneralContext.closeSellWindow) {
-      GeneralContext.closeSellWindow();
+  const handleSellClick = async () => {
+    try {
+      await axios.post("https://trade-x-iaaz.onrender.com/newOrder", {
+        name: uid,
+        qty: stockQuantity,
+        price: stockPrice,
+        mode: "SELL",
+      });
+      generalContext.closeSellWindow();
+    } catch (error) {
+      console.error("Error placing sell order:", error);
+      alert("Failed to place sell order. Please try again.");
     }
   };
 
   const handleCancelClick = () => {
-    if (GeneralContext.closeSellWindow) {
-      GeneralContext.closeSellWindow();
-    }
+    generalContext.closeSellWindow();
   };
 
   return (

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios, { all } from "axios";
 import { VerticalGraph } from "./VerticalGraph";
 import AIRecommendations from "./AIRecommendations";
 import { watchlist } from "../data/data";
+import GeneralContext from "./GeneralContext";
+import { Tooltip, Grow } from "@mui/material";
 
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
@@ -47,23 +49,22 @@ const Holdings = () => {
   return (
     <>
       <h3 className="title">Holdings ({allHoldings.length})</h3>
-
-  <AIRecommendations holdings={allHoldings} watchlist={watchlist} />
+      
+      <AIRecommendations holdings={allHoldings} watchlist={watchlist} />
 
       <div className="order-table">
         <table>
-          <tr>
-            <th>Instrument</th>
-            <th>Qty.</th>
-            <th>Avg. cost</th>
-            <th>LTP</th>
-            <th>Cur. val</th>
-            <th>P&L</th>
-            <th>Net chg.</th>
-            <th>Day chg.</th>
-          </tr>
-
-          {allHoldings.map((stock, index) => {
+              <tr>
+                <th>Instrument</th>
+                <th>Qty.</th>
+                <th>Avg. cost</th>
+                <th>LTP</th>
+                <th>Cur. val</th>
+                <th>P&L</th>
+                <th>Net chg.</th>
+                <th>Day chg.</th>
+                <th>Actions</th>
+              </tr>          {allHoldings.map((stock, index) => {
             const curValue = stock.price * stock.qty;
             const isProfit = curValue - stock.avg * stock.qty >= 0.0;
             const profClass = isProfit ? "profit" : "loss";
@@ -81,6 +82,9 @@ const Holdings = () => {
                 </td>
                 <td className={profClass}>{stock.net}</td>
                 <td className={dayClass}>{stock.day}</td>
+                <td>
+                  <HoldingActions stockName={stock.name} />
+                </td>
               </tr>
             );
           })}
@@ -107,6 +111,43 @@ const Holdings = () => {
       </div>
       <VerticalGraph data={data} />
     </>
+  );
+};
+
+const HoldingActions = ({ stockName }) => {
+  const generalContext = useContext(GeneralContext);
+
+  const handleBuyClick = () => {
+    generalContext.openBuyWindow(stockName);
+  };
+
+  const handleSellClick = () => {
+    generalContext.openSellWindow(stockName);
+  };
+
+  return (
+    <div className="holding-actions">
+      <Tooltip
+        title="Buy more"
+        placement="top"
+        arrow
+        TransitionComponent={Grow}
+      >
+        <button className="btn-small buy" onClick={handleBuyClick}>
+          B
+        </button>
+      </Tooltip>
+      <Tooltip
+        title="Sell"
+        placement="top"
+        arrow
+        TransitionComponent={Grow}
+      >
+        <button className="btn-small sell" onClick={handleSellClick}>
+          S
+        </button>
+      </Tooltip>
+    </div>
   );
 };
 

@@ -80,7 +80,12 @@ const AIRecommendations = ({ holdings, watchlist = [] }) => {
         </div>
 
         <div className="ai-actions">
-          <button className="btn btn-ghost" onClick={() => { setSummary(''); setRecommendations([]); setError(''); }}>Clear</button>
+          <button className="btn btn-ghost" onClick={() => { 
+            setSummary(''); 
+            setRecommendations([]); 
+            setError(''); 
+            setLoading(false);
+          }}>Clear</button>
           <button className="btn btn-primary" onClick={fetchRecommendations}>Get Recommendations</button>
         </div>
       </div>

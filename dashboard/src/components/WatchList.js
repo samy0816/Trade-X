@@ -3,6 +3,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 
 import GeneralContext from "./GeneralContext";
+import SmartTradeAdvisor from "./SmartTradeAdvisor";
 
 import { Tooltip, Grow } from "@mui/material";
 
@@ -19,6 +20,8 @@ import { DoughnutChart } from "./DoughnoutChart";
 const labels = watchlist.map((subArray) => subArray["name"]);
 
 const WatchList = () => {
+  const [selectedStock, setSelectedStock] = useState(null);
+  
   const data = {
     labels,
     datasets: [
@@ -88,18 +91,22 @@ const WatchList = () => {
 
       <ul className="list">
         {watchlist.map((stock, index) => {
-          return <WatchListItem stock={stock} key={index} />;
+          return <WatchListItem stock={stock} key={index} onStockSelect={setSelectedStock} />;
         })}
       </ul>
 
       <DoughnutChart data={data} />
+      
+      {selectedStock && (
+        <SmartTradeAdvisor currentStock={selectedStock} userHoldings={[]} />
+      )}
     </div>
   );
 };
 
 export default WatchList;
 
-const WatchListItem = ({ stock }) => {
+const WatchListItem = ({ stock, onStockSelect }) => {
   const [showWatchlistActions, setShowWatchlistActions] = useState(false);
 
   const handleMouseEnter = (e) => {
@@ -110,9 +117,13 @@ const WatchListItem = ({ stock }) => {
     setShowWatchlistActions(false);
   };
 
+  const handleStockClick = () => {
+    onStockSelect(stock.name);
+  };
+
   return (
     <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <div className="item">
+      <div className="item" onClick={handleStockClick} style={{cursor: 'pointer'}}>
         <p className={stock.isDown ? "down" : "up"}>{stock.name}</p>
         <div className="itemInfo">
           <span className="percent">{stock.percent}</span>
@@ -136,6 +147,10 @@ const WatchListActions = ({ uid }) => {
     generalContext.openBuyWindow(uid);
   };
 
+  const handleSellClick = () => {
+    generalContext.openSellWindow(uid);
+  };
+
   return (
     <span className="actions">
       <span>
@@ -153,6 +168,7 @@ const WatchListActions = ({ uid }) => {
           placement="top"
           arrow
           TransitionComponent={Grow}
+          onClick={handleSellClick}
         >
           <button className="sell">Sell</button>
         </Tooltip>

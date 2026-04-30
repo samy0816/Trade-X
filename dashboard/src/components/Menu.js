@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import axios from "axios";
 import { Link } from "react-router-dom";
 
 const Menu = () => {
@@ -12,6 +12,18 @@ const Menu = () => {
 
   const handleProfileClick = (index) => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('https://trade-x-iaaz.onrender.com/logout');
+      // Redirect to frontend live URL
+      window.location.href = 'https://steady-genie-711707.netlify.app/';
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if logout fails, redirect to frontend
+      window.location.href = 'https://steady-genie-711707.netlify.app/';
+    }
   };
 
   const menuClass = "menu";
@@ -93,6 +105,13 @@ const Menu = () => {
         <div className="profile" onClick={handleProfileClick}>
           <div className="avatar">ZU</div>
           <p className="username">USERID</p>
+          {isProfileDropdownOpen && (
+            <div className="profile-dropdown">
+              <button className="logout-btn" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

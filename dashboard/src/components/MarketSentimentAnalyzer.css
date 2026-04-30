@@ -1,0 +1,216 @@
+.market-sentiment-analyzer {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  color: white;
+  box-shadow: 0 8px 32px rgba(30, 60, 114, 0.3);
+}
+
+.sentiment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sentiment-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sentiment-icon {
+  font-size: 24px;
+}
+
+.sentiment-title h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sentiment-title p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.8;
+  color: #b3d9ff;
+}
+
+.refresh-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.sentiment-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+}
+
+.pulse-loader {
+  width: 20px;
+  height: 20px;
+  background: #4facfe;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.sentiment-error {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.sentiment-results {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.overall-sentiment {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sentiment-gauge {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  height: 60px;
+  border-radius: 30px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.gauge-fill {
+  height: 100%;
+  transition: width 1s ease-in-out;
+  border-radius: 30px;
+}
+
+.gauge-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sentiment-emoji {
+  font-size: 20px;
+}
+
+.sentiment-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sentiment-section h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sentiment-section p {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.drivers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.driver-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.driver-bullet {
+  color: #4facfe;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.recommendation {
+  border-left: 4px solid #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.recommendation p {
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .market-sentiment-analyzer {
+    padding: 16px;
+  }
+  
+  .sentiment-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .sentiment-title {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .gauge-label {
+    font-size: 14px;
+  }
+}

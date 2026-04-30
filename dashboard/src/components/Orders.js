@@ -36,7 +36,9 @@ const Orders = () => {
                   <td>{order.name}</td>
                   <td>{order.qty}</td>
                   <td>{order.price}</td>
-                  <td>{order.mode}</td>
+                  <td className={order.mode === 'BUY' ? 'buy-mode' : 'sell-mode'}>
+                    {order.mode}
+                  </td>
                 </tr>
               ))}
             </table>

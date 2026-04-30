@@ -1,0 +1,304 @@
+.smart-trade-advisor {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  color: white;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+}
+
+.advisor-header {
+  margin-bottom: 24px;
+}
+
+.advisor-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.advisor-icon {
+  font-size: 24px;
+}
+
+.advisor-title h3 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.advisor-title p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.8;
+  color: #e0e7ff;
+}
+
+.trade-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: end;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.input-group select option {
+  background: #4a5568;
+  color: white;
+}
+
+.analyze-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(45deg, #4facfe, #00f2fe);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+}
+
+.analyze-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+}
+
+.analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.advisor-error {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.advisor-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+}
+
+.loading-pulse {
+  width: 20px;
+  height: 20px;
+  background: #4facfe;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.analysis-results {
+  margin-top: 24px;
+}
+
+.trade-signal {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.signal-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.signal-icon {
+  font-size: 32px;
+}
+
+.signal-header h4 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.confidence-bar {
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.confidence-fill {
+  height: 100%;
+  transition: width 1s ease-in-out;
+  border-radius: 4px;
+}
+
+.confidence-bar span {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.analysis-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.analysis-card:hover {
+  transform: translateY(-2px);
+}
+
+.analysis-card h5 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analysis-card p {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.95;
+  font-size: 14px;
+}
+
+.entry {
+  border-left: 4px solid #4caf50;
+}
+
+.risk {
+  border-left: 4px solid #ff9800;
+}
+
+.position {
+  border-left: 4px solid #2196f3;
+}
+
+.stop-loss {
+  border-left: 4px solid #f44336;
+}
+
+.profit {
+  border-left: 4px solid #4caf50;
+}
+
+.market {
+  border-left: 4px solid #9c27b0;
+}
+
+.portfolio {
+  border-left: 4px solid #00bcd4;
+}
+
+.advisor-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.copy-analysis-btn,
+.save-analysis-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.copy-analysis-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.copy-analysis-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.save-analysis-btn {
+  background: linear-gradient(45deg, #51cf66, #40c057);
+  color: white;
+  box-shadow: 0 4px 15px rgba(81, 207, 102, 0.4);
+}
+
+.save-analysis-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(81, 207, 102, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .smart-trade-advisor {
+    padding: 16px;
+  }
+  
+  .trade-inputs {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .advisor-actions {
+    flex-direction: column;
+  }
+  
+  .signal-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}
