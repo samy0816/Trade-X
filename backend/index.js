@@ -90,9 +90,6 @@ app.use(cors({
   credentials: true
 }));
 
-// Handle preflight requests for all routes (Express 5 compatible)
-app.options('/(.*)', cors());
-
 app.use(bodyParser.json());
 
 app.post('/ai/recommendations', async (req, res) => {
