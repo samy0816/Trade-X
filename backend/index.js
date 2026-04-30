@@ -69,7 +69,28 @@ const { UserModel } = require('./model/UserModel');
 //   res.send("Positions added");
 // })
 const app = express();
-app.use(cors());
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://steady-genie-711707.netlify.app',
+  'https://zesty-liger-ed149b.netlify.app'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (e.g. mobile apps, curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+// Handle preflight requests for all routes
+app.options('*', cors());
 
 app.use(bodyParser.json());
 
