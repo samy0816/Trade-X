@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios, { all } from "axios";
+import axios from "axios";
 import { VerticalGraph } from "./VerticalGraph";
 import AIRecommendations from "./AIRecommendations";
 import { watchlist } from "../data/data";
@@ -8,12 +8,19 @@ import { Tooltip, Grow } from "@mui/material";
 
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-  axios.get("https://trade-x-iaaz.onrender.com/allHoldings").then((res) => {
-      // console.log(res.data);
-      setAllHoldings(res.data);
-    });
+    axios.get("https://trade-x-iaaz.onrender.com/allHoldings")
+      .then((res) => {
+        setAllHoldings(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to load holdings. Is the backend running?");
+        setLoading(false);
+      });
   }, []);
 
   // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -48,12 +55,15 @@ const Holdings = () => {
 
   return (
     <>
+      {loading && <div style={{padding:'16px',color:'#555'}}>Loading holdings…</div>}
+      {error && <div style={{padding:'16px',color:'#dc2626'}}>{error} <button onClick={() => window.location.reload()}>Retry</button></div>}
       <h3 className="title">Holdings ({allHoldings.length})</h3>
       
       <AIRecommendations holdings={allHoldings} watchlist={watchlist} />
 
       <div className="order-table">
         <table>
+              <thead>
               <tr>
                 <th>Instrument</th>
                 <th>Qty.</th>
@@ -64,7 +74,10 @@ const Holdings = () => {
                 <th>Net chg.</th>
                 <th>Day chg.</th>
                 <th>Actions</th>
-              </tr>          {allHoldings.map((stock, index) => {
+              </tr>
+              </thead>
+              <tbody>
+          {allHoldings.map((stock, index) => {
             const curValue = stock.price * stock.qty;
             const isProfit = curValue - stock.avg * stock.qty >= 0.0;
             const profClass = isProfit ? "profit" : "loss";
@@ -88,6 +101,7 @@ const Holdings = () => {
               </tr>
             );
           })}
+              </tbody>
         </table>
       </div>
 

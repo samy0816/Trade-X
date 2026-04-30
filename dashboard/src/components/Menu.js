@@ -1,20 +1,30 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Menu = () => {
-  const [selectedMenu, setSelectedMenu] = useState(0);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const location = useLocation();
 
-  const handleMenuClick = (index) => {
-    setSelectedMenu(index);
-  };
+  // Derive active menu from current URL — survives page refresh
+  const pathToMenu = { '/': 0, '/orders': 1, '/holdings': 2, '/positions': 3, '/funds': 4, '/apps': 6 };
+  const selectedMenu = pathToMenu[location.pathname] ?? 0;
 
-  const handleProfileClick = (index) => {
+  // Read user info saved to localStorage after login
+  const user = JSON.parse(localStorage.getItem('tradeXUser') || '{}');
+  const initials = user.name
+    ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'ZU';
+  const displayUsername = user.email || 'USERID';
+
+  const handleMenuClick = () => {}; // active state now derived from URL
+
+  const handleProfileClick = () => {
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
 
   const handleLogout = async () => {
+    localStorage.removeItem('tradeXUser');
     try {
       await axios.post('https://trade-x-iaaz.onrender.com/logout');
       // Redirect to frontend live URL
@@ -103,8 +113,8 @@ const Menu = () => {
         </ul>
         <hr />
         <div className="profile" onClick={handleProfileClick}>
-          <div className="avatar">ZU</div>
-          <p className="username">USERID</p>
+          <div className="avatar">{initials}</div>
+          <p className="username">{displayUsername}</p>
           {isProfileDropdownOpen && (
             <div className="profile-dropdown">
               <button className="logout-btn" onClick={handleLogout}>

@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { GeneralContext } from './GeneralContext';
 import './RAGAIAnalyzer.css';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 

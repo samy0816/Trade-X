@@ -6,8 +6,8 @@ const Funds = () => {
     <>
       <div className="funds">
         <p>Instant, zero-cost fund transfers with UPI </p>
-        <Link className="btn btn-green">Add funds</Link>
-        <Link className="btn btn-blue">Withdraw</Link>
+        <Link to="#" className="btn btn-green" onClick={(e) => { e.preventDefault(); alert('Fund transfer feature coming soon!'); }}>Add funds</Link>
+        <Link to="#" className="btn btn-blue" onClick={(e) => { e.preventDefault(); alert('Withdrawal feature coming soon!'); }}>Withdraw</Link>
       </div>
 
       <div className="row">

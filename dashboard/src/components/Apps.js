@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import RAGAIAnalyzer from "./RAGAIAnalyzer";
+import { watchlist as staticWatchlist } from "../data/data";
 import "./Apps.css";
 
 const Apps = () => {
@@ -21,13 +22,8 @@ const Apps = () => {
       setAllHoldings([]);
     });
 
-    // Mock watchlist data (you can replace this with actual API call)
-    setWatchlist([
-      { name: "INFY", price: 1400 },
-      { name: "HDFC", price: 1600 },
-      { name: "WIPRO", price: 400 },
-      { name: "ICICIBANK", price: 900 }
-    ]);
+    // Use real watchlist from data
+    setWatchlist(staticWatchlist);
   }, []);
 
   return (

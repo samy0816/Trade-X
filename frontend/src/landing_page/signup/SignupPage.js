@@ -23,6 +23,8 @@ function SignupPage() {
             const response = await axios.post(`https://trade-x-iaaz.onrender.com${endpoint}`, formData);
             
             if (response.data.message.includes('successful')) {
+                // Save user info for dashboard to display
+                localStorage.setItem('tradeXUser', JSON.stringify(response.data.user || {}));
                 // Redirect to dashboard live URL
                 window.location.href = 'https://zesty-liger-ed149b.netlify.app/';
             }

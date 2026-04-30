@@ -205,9 +205,14 @@ app.post('/ai/trade-analysis', async (req, res) => {
 });
 
 app.use(session({
-  secret: 'your-secret-key',
+  secret: process.env.SESSION_SECRET || 'fallback-dev-secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 app.use(passport.initialize());
@@ -324,9 +329,14 @@ app.post('/newOrder', async (req, res) => {
 
   res.send("New order added");
 });
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-  mongoose.connect(uri)
+mongoose.connect(uri)
+  .then(() => {
     console.log("MongoDB connected");
-
-});
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection failed:", err);
+    process.exit(1);
+  });

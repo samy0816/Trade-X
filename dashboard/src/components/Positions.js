@@ -3,19 +3,30 @@ import axios from "axios";
 
 const Positions = () => {
    const [allPositions, setAllPositions] = useState([]);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState("");
 
     useEffect(() => {
-  axios.get("https://trade-x-iaaz.onrender.com/allPositions").then((res) => {
+    axios.get("https://trade-x-iaaz.onrender.com/allPositions")
+      .then((res) => {
         setAllPositions(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to load positions. Is the backend running?");
+        setLoading(false);
       });
     }, []);
   
   return (
     <>
+      {loading && <div style={{padding:'16px',color:'#555'}}>Loading positions…</div>}
+      {error && <div style={{padding:'16px',color:'#dc2626'}}>{error} <button onClick={() => window.location.reload()}>Retry</button></div>}
       <h3 className="title">Positions ({allPositions.length})</h3>
 
       <div className="order-table">
         <table>
+          <thead>
           <tr>
             <th>Product</th>
             <th>Instrument</th>
@@ -25,6 +36,8 @@ const Positions = () => {
             <th>P&L</th>
             <th>Chg.</th>
           </tr>
+          </thead>
+          <tbody>
 
           {allPositions.map((stock, index) => {
             const curValue = stock.price * stock.qty;
@@ -46,6 +59,7 @@ const Positions = () => {
               </tr>
             );
           })}
+          </tbody>
         </table>
       </div>
     </>

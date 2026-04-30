@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import axios from "axios";
 
@@ -21,6 +21,21 @@ const labels = watchlist.map((subArray) => subArray["name"]);
 
 const WatchList = () => {
   const [selectedStock, setSelectedStock] = useState(null);
+  const [allHoldings, setAllHoldings] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:3002'
+      : 'https://trade-x-iaaz.onrender.com';
+    axios.get(`${API_BASE_URL}/allHoldings`).then((res) => {
+      setAllHoldings(res.data);
+    }).catch(() => {});
+  }, []);
+
+  const filteredWatchlist = searchTerm
+    ? watchlist.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    : watchlist;
   
   const data = {
     labels,
@@ -85,12 +100,14 @@ const WatchList = () => {
           id="search"
           placeholder="Search eg:infy, bse, nifty fut weekly, gold mcx"
           className="search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <span className="counts"> {watchlist.length} / 50</span>
+        <span className="counts"> {filteredWatchlist.length} / 50</span>
       </div>
 
       <ul className="list">
-        {watchlist.map((stock, index) => {
+        {filteredWatchlist.map((stock, index) => {
           return <WatchListItem stock={stock} key={index} onStockSelect={setSelectedStock} />;
         })}
       </ul>
@@ -98,7 +115,7 @@ const WatchList = () => {
       <DoughnutChart data={data} />
       
       {selectedStock && (
-        <SmartTradeAdvisor currentStock={selectedStock} userHoldings={[]} />
+        <SmartTradeAdvisor currentStock={selectedStock} userHoldings={allHoldings} />
       )}
     </div>
   );
