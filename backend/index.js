@@ -19,6 +19,56 @@ const LocalStrategy = require('passport-local').Strategy;
 const { UserModel } = require('./model/UserModel');
 const { getRAGEnhancedRecommendations } = require('./services/ragService');
 
+// ── Demo / Fallback data (used when MongoDB is unreachable) ──
+const demoUser = {
+  id: 'demo-001',
+  _id: 'demo-001',
+  email: 'demo@tradex.dev',
+  name: 'Demo User'
+};
+
+const demoHoldings = [
+  { name: "BHARTIARTL", qty: 2, avg: 538.05, price: 541.15, net: "+0.58%", day: "+2.99%" },
+  { name: "HDFCBANK",  qty: 2, avg: 1383.40, price: 1522.35, net: "+10.04%", day: "+0.11%" },
+  { name: "INFY",      qty: 1, avg: 1350.50, price: 1555.45, net: "+15.18%", day: "-1.60%", isLoss: true },
+  { name: "TCS",       qty: 1, avg: 3041.70, price: 3194.80, net: "+5.03%", day: "-0.25%", isLoss: true },
+  { name: "RELIANCE",  qty: 1, avg: 2193.70, price: 2112.40, net: "-3.71%", day: "+1.44%" },
+  { name: "SBIN",      qty: 4, avg: 324.35, price: 430.20, net: "+32.63%", day: "-0.34%", isLoss: true },
+  { name: "WIPRO",     qty: 4, avg: 489.30, price: 577.75, net: "+18.08%", day: "+0.32%" },
+];
+
+const demoPositions = [
+  { product: "CNC", name: "EVEREADY", qty: 2, avg: 316.27, price: 312.35, net: "+0.58%", day: "-1.24%", isLoss: true },
+  { product: "CNC", name: "JUBLFOOD", qty: 1, avg: 3124.75, price: 3082.65, net: "+10.04%", day: "-1.35%", isLoss: true },
+];
+
+const demoOrders = [
+  { name: "INFY", qty: 2, price: 1520.00, mode: "BUY" },
+  { name: "TCS", qty: 1, price: 3100.50, mode: "SELL" },
+];
+
+// In-memory store for demo orders (survives until server restart)
+const memOrders = [...demoOrders];
+const memHoldings = demoHoldings.map(h => ({...h}));
+
+// Serialize/unserialize helpers for Passport (demo user has no real DB _id)
+passport.serializeUser((user, done) => {
+  done(null, user._id || user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await UserModel.findById(id);
+    done(null, user);
+  } catch (_err) {
+    // If DB is down, return the demo user if that's who's logging in
+    if (id === demoUser.id || id === demoUser._id) {
+      return done(null, demoUser);
+    }
+    done(null, null);
+  }
+});
+
 // app.get("/addHoldings", (req, res) => {
 //   let tempHoldings=[
 //     { name: "SAP", qty: 10, avg: 130, price: 136.0, net: "+4.6%", day: "+0.8%" },
@@ -234,17 +284,15 @@ passport.use(new LocalStrategy({
   }
 }));
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await UserModel.findById(id);
-    done(null, user);
-  } catch (error) {
-    done(error);
-  }
+// ── Demo Login ── skips MongoDB entirely, always works
+app.post('/demo-login', (req, res) => {
+  req.login(demoUser, (err) => {
+    if (err) return res.status(500).json({ message: 'Demo login failed' });
+    return res.json({
+      message: 'Demo login successful',
+      user: { id: demoUser._id, email: demoUser.email, name: demoUser.name }
+    });
+  });
 });
 
 app.post('/signup', async (req, res) => {
@@ -284,47 +332,70 @@ app.post('/logout', (req, res) => {
 });
 
 app.get('/allHoldings', async (req, res) => {
-  let allHoldings = await HoldingsModel.find({});
-  res.json(allHoldings);
+  try {
+    let allHoldings = await HoldingsModel.find({});
+    res.json(allHoldings);
+  } catch (_err) {
+    // MongoDB down → return demo data
+    console.log('DB unavailable, returning demo holdings');
+    res.json(demoHoldings);
+  }
 });
 
 app.get('/allOrders', async (req, res) => {
-  let allOrders = await OrdersModel.find({});
-  res.json(allOrders);
+  try {
+    let allOrders = await OrdersModel.find({});
+    res.json(allOrders);
+  } catch (_err) {
+    console.log('DB unavailable, returning in-memory orders');
+    res.json(memOrders);
+  }
 });
+
 app.get('/allPositions', async (req, res) => {
-  let allPositions = await PositionsModel.find({});
-  res.json(allPositions);
+  try {
+    let allPositions = await PositionsModel.find({});
+    res.json(allPositions);
+  } catch (_err) {
+    console.log('DB unavailable, returning demo positions');
+    res.json(demoPositions);
+  }
 });
 
 app.post('/newOrder', async (req, res) => {
   const { name, qty, price, mode } = req.body;
 
-  // Save the order
-  let newOrder = new OrdersModel({
-    name,
-    qty,
-    price,
-    mode
-  });
-  await newOrder.save();
+  try {
+    // Try saving to MongoDB
+    let newOrder = new OrdersModel({ name, qty, price, mode });
+    await newOrder.save();
 
-  // Sell logic: update holdings/positions if mode is SELL
-  if (mode === "SELL") {
-    // Example: Decrease qty in HoldingsModel
-    let holding = await HoldingsModel.findOne({ name });
-    if (holding) {
-      holding.qty -= qty;
-      if (holding.qty <= 0) {
-        await HoldingsModel.deleteOne({ name });
-      } else {
-        await holding.save();
+    // Sell logic: update holdings
+    if (mode === "SELL") {
+      let holding = await HoldingsModel.findOne({ name });
+      if (holding) {
+        holding.qty -= qty;
+        if (holding.qty <= 0) {
+          await HoldingsModel.deleteOne({ name });
+        } else {
+          await holding.save();
+        }
       }
     }
-    // You can add similar logic for PositionsModel if needed
+  } catch (_err) {
+    // MongoDB down → use in-memory store
+    console.log('DB unavailable, using in-memory order store');
+    memOrders.push({ name, qty: Number(qty), price: Number(price), mode });
+    if (mode === "SELL") {
+      const idx = memHoldings.findIndex(h => h.name === name);
+      if (idx >= 0) {
+        memHoldings[idx].qty -= Number(qty);
+        if (memHoldings[idx].qty <= 0) memHoldings.splice(idx, 1);
+      }
+    }
   }
 
-  res.send("New order added");
+  res.json({ message: "Order placed successfully" });
 });
 mongoose.connect(uri)
   .then(() => {

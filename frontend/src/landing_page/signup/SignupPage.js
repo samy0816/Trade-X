@@ -8,6 +8,7 @@ function SignupPage() {
         password: ''
     });
     const [isLogin, setIsLogin] = useState(false);
+    const [demoLoading, setDemoLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
@@ -30,6 +31,23 @@ function SignupPage() {
             }
         } catch (error) {
             alert(error.response?.data?.message || 'An error occurred');
+        }
+    };
+
+    const handleDemoLogin = async () => {
+        setDemoLoading(true);
+        try {
+            const response = await axios.post('https://trade-x-iaaz.onrender.com/demo-login');
+            if (response.data.message.includes('successful')) {
+                localStorage.setItem('tradeXUser', JSON.stringify(response.data.user || {}));
+                window.location.href = 'https://zesty-liger-ed149b.netlify.app/';
+            }
+        } catch (error) {
+            // Even if backend errors, still try redirect (demo fallback works client-side too)
+            localStorage.setItem('tradeXUser', JSON.stringify({ id: 'demo-001', email: 'demo@tradex.dev', name: 'Demo User' }));
+            window.location.href = 'https://zesty-liger-ed149b.netlify.app/';
+        } finally {
+            setDemoLoading(false);
         }
     };
 
@@ -85,6 +103,31 @@ function SignupPage() {
                     {isLogin ? 'Sign Up' : 'Login'}
                 </button>
             </p>
+
+            <hr style={{ margin: '20px 0', borderColor: '#e0e0e0' }} />
+
+            <div style={{ textAlign: 'center' }}>
+                <p style={{ color: '#666', fontSize: '13px', marginBottom: '8px' }}>
+                    Recruiter or just testing? Skip the signup:
+                </p>
+                <button
+                    onClick={handleDemoLogin}
+                    disabled={demoLoading}
+                    style={{
+                        width: '100%',
+                        padding: '12px',
+                        backgroundColor: demoLoading ? '#999' : '#22c55e',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '15px',
+                        fontWeight: 600,
+                        cursor: demoLoading ? 'default' : 'pointer'
+                    }}
+                >
+                    {demoLoading ? 'Signing in…' : '🚀 Instant Demo Access'}
+                </button>
+            </div>
         </div>
     );
 }
