@@ -9,6 +9,7 @@ import {
   WarningAmber,
   Layers,
 } from '@mui/icons-material';
+import { cleanAiText } from '../utils/aiText';
 
 // API Configuration
 const apiConfig = {
@@ -173,7 +174,7 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
               </h3>
               <div className="insight-content">
                 {analysis.marketInsight.split('\n').map((line, idx) => (
-                  <p key={idx} className="insight-line">{line}</p>
+                  <p key={idx} className="insight-line">{cleanAiText(line)}</p>
                 ))}
               </div>
             </div>
@@ -189,7 +190,7 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
                 {analysis.strategicRecommendations.map((rec, idx) => (
                   <div key={idx} className="recommendation-item">
                     <div className="rec-number">{idx + 1}</div>
-                    <div className="rec-text">{rec}</div>
+                    <div className="rec-text">{cleanAiText(rec)}</div>
                   </div>
                 ))}
               </div>
@@ -204,7 +205,7 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
               </h3>
               <div className="risk-content">
                 {analysis.riskAssessment.split('\n').map((line, idx) => (
-                  <p key={idx} className="risk-line">{line}</p>
+                  <p key={idx} className="risk-line">{cleanAiText(line)}</p>
                 ))}
               </div>
             </div>
@@ -218,7 +219,7 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
               </h3>
               <div className="sector-content">
                 {analysis.sectorAnalysis.split('\n').map((line, idx) => (
-                  <p key={idx} className="sector-line">{line}</p>
+                  <p key={idx} className="sector-line">{cleanAiText(line)}</p>
                 ))}
               </div>
             </div>

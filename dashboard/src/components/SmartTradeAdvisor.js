@@ -18,6 +18,7 @@ import {
   ContentCopy,
   Save,
 } from '@mui/icons-material';
+import { cleanAiText } from '../utils/aiText';
 
 // API Configuration
 const apiConfig = {
@@ -244,7 +245,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 <h5>
                   <Flag /> Entry Strategy
                 </h5>
-                <p>{analysis.entryStrategy}</p>
+                <p>{cleanAiText(analysis.entryStrategy)}</p>
               </div>
             )}
 
@@ -253,7 +254,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 <h5>
                   <WarningAmber /> Risk Analysis
                 </h5>
-                <p>{analysis.riskAnalysis}</p>
+                <p>{cleanAiText(analysis.riskAnalysis)}</p>
               </div>
             )}
 
@@ -262,7 +263,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 <h5>
                   <AccountBalanceWallet /> Position Sizing
                 </h5>
-                <p>{analysis.positionSizing}</p>
+                <p>{cleanAiText(analysis.positionSizing)}</p>
               </div>
             )}
 
@@ -271,7 +272,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 <h5>
                   <Shield /> Stop Loss
                 </h5>
-                <p>{analysis.stopLoss}</p>
+                <p>{cleanAiText(analysis.stopLoss)}</p>
               </div>
             )}
 
@@ -280,7 +281,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 <h5>
                   <Toll /> Profit Targets
                 </h5>
-                <p>{analysis.profitTargets}</p>
+                <p>{cleanAiText(analysis.profitTargets)}</p>
               </div>
             )}
 
@@ -289,7 +290,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 <h5>
                   <ShowChart /> Market Context
                 </h5>
-                <p>{analysis.marketContext}</p>
+                <p>{cleanAiText(analysis.marketContext)}</p>
               </div>
             )}
 
@@ -298,7 +299,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 <h5>
                   <PieChart /> Portfolio Impact
                 </h5>
-                <p>{analysis.portfolioImpact}</p>
+                <p>{cleanAiText(analysis.portfolioImpact)}</p>
               </div>
             )}
           </div>

@@ -12,6 +12,7 @@ import {
   ErrorOutline,
 } from '@mui/icons-material';
 import './MarketSentimentAnalyzer.css';
+import { cleanAiText } from '../utils/aiText';
 
 // API Configuration
 const apiConfig = {
@@ -202,7 +203,7 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
                 {sentiment.drivers.map((driver, idx) => (
                   <div key={idx} className="driver-item">
                     <span className="driver-bullet" />
-                    <span>{driver}</span>
+                    <span>{cleanAiText(driver)}</span>
                   </div>
                 ))}
               </div>
@@ -215,7 +216,7 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
               <h4>
                 <ShowChart /> Stock-Specific Sentiment
               </h4>
-              <p>{sentiment.stockSpecific}</p>
+              <p>{cleanAiText(sentiment.stockSpecific)}</p>
             </div>
           )}
 
@@ -226,7 +227,7 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
                 <Lightbulb /> Market Timing
               </h4>
               <p>
-                <strong>{sentiment.recommendation}</strong>
+                <strong>{cleanAiText(sentiment.recommendation)}</strong>
               </p>
             </div>
           )}

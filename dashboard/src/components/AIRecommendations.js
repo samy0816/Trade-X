@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import './AIRecommendations.css';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { cleanAiText } from '../utils/aiText';
 
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:3002'
@@ -99,14 +100,14 @@ const AIRecommendations = ({ holdings, watchlist = [] }) => {
 
       {(summary || recommendations.length > 0) && (
         <div>
-          {summary && <div className="ai-summary">{summary}</div>}
+          {summary && <div className="ai-summary">{cleanAiText(summary)}</div>}
 
           {recommendations.length > 0 && (
             <div className="ai-list">
               {recommendations.map((rec, idx) => (
                 <div key={idx} className="ai-item">
                   <div className="dot" />
-                  <div style={{flex:1}}>{rec}</div>
+                  <div style={{flex:1}}>{cleanAiText(rec)}</div>
                 </div>
               ))}
 
