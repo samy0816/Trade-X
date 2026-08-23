@@ -33,16 +33,27 @@ const parseRAGOutput = (text) => {
   
   if (!text) return result;
 
-  // Convert escaped newlines to actual newlines for better parsing
-  const cleanText = text.replace(/\\n/g, '\n').replace(/\\r/g, '');
+  // Convert escaped newlines, then normalize Markdown heading/number/bullet
+  // artifacts so labels like "### 1) MARKET_INSIGHT", "**MARKET_INSIGHT**"
+  // or "MARKET_INSIGHT" all match.
+  const cleanText = text
+    .replace(/\\n/g, '\n')
+    .replace(/\\r/g, '')
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/^\s*\d+[.)]\s*/gm, '')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/\*\*/g, '');
+
+  // A label may appear with or without a trailing colon
+  const label = (name) => `${name}\\s*:?`;
 
   // Parse different sections
-  const marketInsightMatch = cleanText.match(/MARKET_INSIGHT:\s*([\s\S]*?)(?:\n\s*STRATEGIC_RECOMMENDATIONS:|$)/i);
+  const marketInsightMatch = cleanText.match(new RegExp(`(?:^|\\n)\\s*${label('MARKET_INSIGHT')}\\s*([\\s\\S]*?)(?=\\n\\s*${label('STRATEGIC_RECOMMENDATIONS')}|$)`, 'i'));
   if (marketInsightMatch) {
     result.marketInsight = marketInsightMatch[1].trim();
   }
 
-  const strategicMatch = cleanText.match(/STRATEGIC_RECOMMENDATIONS:\s*([\s\S]*?)(?:\n\s*RISK_ASSESSMENT:|$)/i);
+  const strategicMatch = cleanText.match(new RegExp(`(?:^|\\n)\\s*${label('STRATEGIC_RECOMMENDATIONS')}\\s*([\\s\\S]*?)(?=\\n\\s*${label('RISK_ASSESSMENT')}|$)`, 'i'));
   if (strategicMatch) {
     const recs = strategicMatch[1]
       .split(/\n/)
@@ -53,12 +64,12 @@ const parseRAGOutput = (text) => {
     result.strategicRecommendations = recs;
   }
 
-  const riskMatch = cleanText.match(/RISK_ASSESSMENT:\s*([\s\S]*?)(?:\n\s*SECTOR_ANALYSIS:|$)/i);
+  const riskMatch = cleanText.match(new RegExp(`(?:^|\\n)\\s*${label('RISK_ASSESSMENT')}\\s*([\\s\\S]*?)(?=\\n\\s*${label('SECTOR_ANALYSIS')}|$)`, 'i'));
   if (riskMatch) {
     result.riskAssessment = riskMatch[1].trim();
   }
 
-  const sectorMatch = cleanText.match(/SECTOR_ANALYSIS:\s*([\s\S]*)/i);
+  const sectorMatch = cleanText.match(new RegExp(`(?:^|\\n)\\s*${label('SECTOR_ANALYSIS')}\\s*([\\s\\S]*)`, 'i'));
   if (sectorMatch) {
     result.sectorAnalysis = sectorMatch[1].trim();
   }

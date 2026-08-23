@@ -15,13 +15,23 @@ const parseModelOutput = (text) => {
   const result = { summary: "", recs: [] };
   if (!text) return result;
 
-  // Find SUMMARY: and RECOMMENDATIONS: blocks
-  const summaryMatch = text.match(/SUMMARY:\s*([\s\S]*?)(?:\n\s*RECOMMENDATIONS:|$)/i);
+  // Normalize Markdown heading/number/bullet artifacts so labels like
+  // "### 1) SUMMARY", "**SUMMARY:**" or "SUMMARY:" all match.
+  const cleanText = text
+    .replace(/\\n/g, '\n')
+    .replace(/\\r/g, '')
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/^\s*\d+[.)]\s*/gm, '')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/\*\*/g, '');
+
+  // Find SUMMARY: and RECOMMENDATIONS: blocks (colon optional)
+  const summaryMatch = cleanText.match(/(?:^|\n)\s*SUMMARY\s*:?\s*([\s\S]*?)(?=\n\s*RECOMMENDATIONS\s*:?|$)/i);
   if (summaryMatch) {
     result.summary = summaryMatch[1].trim().replace(/\n+/g, ' ');
   }
 
-  const recMatch = text.match(/RECOMMENDATIONS:\s*([\s\S]*)/i);
+  const recMatch = cleanText.match(/(?:^|\n)\s*RECOMMENDATIONS\s*:?\s*([\s\S]*)/i);
   if (recMatch) {
     // split lines, keep non-empty, take up to 3
     const lines = recMatch[1]
@@ -34,11 +44,11 @@ const parseModelOutput = (text) => {
 
   // Fallback: if no labeled sections, derive the first paragraph as summary and top 3 lines as recs
   if (!result.summary) {
-    const para = text.split('\n\n')[0] || text.split('\n')[0];
+    const para = cleanText.split('\n\n')[0] || cleanText.split('\n')[0];
     result.summary = (para || '').trim();
   }
   if (result.recs.length === 0) {
-    const lines = text
+    const lines = cleanText
       .split(/\n|\r/)
       .map(l => l.trim())
       .filter(Boolean)
