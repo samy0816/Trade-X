@@ -9,7 +9,7 @@ const {HoldingsModel} = require("./model/HoldingsModel");
 const {PositionsModel}=require("./model/PositionsMode");
 const{OrdersModel}=require("./model/OrdersModel");
 
-// Gemini AI HTTP API integration for gemini-2.0-flash
+// Gemini AI HTTP API integration for gemini-3.1-flash-lite
 
 const bodyParser=require('body-parser');
 const cors=require('cors');
@@ -142,6 +142,44 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
+// ── Resilient Gemini caller ──
+// Retries transient 429 (rate-limit) responses with backoff and surfaces the
+// real error so the UI can tell the user to retry, instead of silently
+// returning a placeholder like "No recommendation received."
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function callGemini(prompt) {
+  const apiKey = process.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) throw new Error('AI service is not configured. Add VITE_GEMINI_API_KEY to the backend .env.');
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
+
+  let lastError = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await sleep(attempt * 1500); // 1.5s, 3s backoff
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    });
+
+    if (response.status === 429) {
+      lastError = new Error('AI service is rate-limited. Please wait a minute and try again.');
+      continue;
+    }
+    if (!response.ok) {
+      throw new Error(`AI service error (${response.status}). Please try again.`);
+    }
+
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) throw new Error('AI service returned an empty response. Please try again.');
+    return text;
+  }
+  throw lastError || new Error('AI service is unavailable. Please try again.');
+}
+
 app.post('/ai/recommendations', async (req, res) => {
   try {
     const { holdings, watchlist } = req.body;
@@ -151,21 +189,11 @@ app.post('/ai/recommendations', async (req, res) => {
 1) SUMMARY: one paragraph (2-3 sentences) stating the portfolio's key observation. Do not include legal advice or disclaimers.
 2) RECOMMENDATIONS: up to 3 short, actionable recommendations (each 8-14 words), prioritizing interactions between holdings and watchlist (e.g., overlapping sectors, potential hedges, or buy/sell candidates).
 Return plain text with the labels 'SUMMARY:' and 'RECOMMENDATIONS:' so the frontend can parse them programmatically.`;
-    const apiKey = process.env.VITE_GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    });
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No recommendation received.";
+    const text = await callGemini(prompt);
     res.json({ recommendations: text });
   } catch (error) {
-     console.error('AI Recommendation Error:', error, error.stack);
-    res.status(500).json({ message: 'AI recommendation error', error: error.message });
+    console.error('AI Recommendation Error:', error.message);
+    res.status(503).json({ message: error.message, error: error.message });
   }
 });
 
@@ -193,23 +221,11 @@ app.post('/ai/market-sentiment', async (req, res) => {
     STOCK_SPECIFIC: Individual sentiment
     RECOMMENDATION: Market timing advice`;
     
-    const apiKey = process.env.VITE_GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    });
-    
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No sentiment data available.";
+    const text = await callGemini(prompt);
     res.json({ sentiment: text });
   } catch (error) {
-    console.error('Market Sentiment Error:', error);
-    res.status(500).json({ message: 'Market sentiment error', error: error.message });
+    console.error('Market Sentiment Error:', error.message);
+    res.status(503).json({ message: error.message, error: error.message });
   }
 });
 
@@ -231,23 +247,11 @@ app.post('/ai/trade-analysis', async (req, res) => {
     MARKET_CONTEXT: Current market impact
     PORTFOLIO_IMPACT: Effect on overall portfolio`;
     
-    const apiKey = process.env.VITE_GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    });
-    
-    const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Analysis not available.";
+    const text = await callGemini(prompt);
     res.json({ analysis: text });
   } catch (error) {
-    console.error('Trade Analysis Error:', error);
-    res.status(500).json({ message: 'Trade analysis error', error: error.message });
+    console.error('Trade Analysis Error:', error.message);
+    res.status(503).json({ message: error.message, error: error.message });
   }
 });
 
@@ -397,14 +401,19 @@ app.post('/newOrder', async (req, res) => {
 
   res.json({ message: "Order placed successfully" });
 });
+// Start the HTTP server regardless of MongoDB availability so that the
+// demo/in-memory data fallbacks and the Gemini-powered AI endpoints keep
+// working. MongoDB connects in the background; data routes already fall
+// back to demo data on failure.
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
 mongoose.connect(uri)
   .then(() => {
     console.log("MongoDB connected");
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
   })
   .catch((err) => {
-    console.error("MongoDB connection failed:", err);
-    process.exit(1);
+    console.error("MongoDB connection failed:", err.message);
+    console.log("Continuing with demo/in-memory data fallback");
   });

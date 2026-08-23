@@ -1,6 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './SmartTradeAdvisor.css';
+import {
+  AutoAwesome,
+  Search,
+  ErrorOutline,
+  TrendingUp,
+  TrendingDown,
+  TrendingFlat,
+  Flag,
+  WarningAmber,
+  AccountBalanceWallet,
+  Shield,
+  Toll,
+  ShowChart,
+  PieChart,
+  ContentCopy,
+  Save,
+} from '@mui/icons-material';
 
 // API Configuration
 const apiConfig = {
@@ -58,7 +75,7 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
       parseTradeAnalysis(text);
       
     } catch (err) {
-      setError("Failed to analyze trade opportunity.");
+      setError(err.response?.data?.message || "Failed to analyze trade opportunity.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -131,11 +148,11 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
 
   const getSignalIcon = (signal) => {
     switch (signal) {
-      case 'Strong Buy': return '🚀';
-      case 'Buy': return '📈';
-      case 'Strong Sell': return '🔻';
-      case 'Sell': return '📉';
-      default: return '⏸️';
+      case 'Strong Buy': return <TrendingUp className="signal-ico is-buy" />;
+      case 'Buy': return <TrendingUp className="signal-ico is-buy" />;
+      case 'Strong Sell': return <TrendingDown className="signal-ico is-sell" />;
+      case 'Sell': return <TrendingDown className="signal-ico is-sell" />;
+      default: return <TrendingFlat className="signal-ico is-hold" />;
     }
   };
 
@@ -143,7 +160,9 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
     <div className="smart-trade-advisor">
       <div className="advisor-header">
         <div className="advisor-title">
-          <span className="advisor-icon">🎯</span>
+          <span className="advisor-icon-badge">
+            <AutoAwesome />
+          </span>
           <div>
             <h3>Smart Trade Advisor</h3>
             <p>AI-powered trade analysis and recommendations</p>
@@ -170,18 +189,20 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
           </select>
         </div>
 
-        <button 
-          className="analyze-btn" 
+        <button
+          className="analyze-btn"
           onClick={analyzeTradeOpportunity}
           disabled={loading || !currentStock}
         >
-          {loading ? '🔄 Analyzing...' : '🔍 Analyze Trade'}
+          <Search className={loading ? 'spin' : ''} />
+          <span>{loading ? 'Analyzing…' : 'Analyze Trade'}</span>
         </button>
       </div>
 
       {error && (
         <div className="advisor-error">
-          <span>❌ {error}</span>
+          <ErrorOutline />
+          <span>{error}</span>
         </div>
       )}
 
@@ -220,49 +241,63 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
           <div className="analysis-grid">
             {analysis.entryStrategy && (
               <div className="analysis-card entry">
-                <h5>🎯 Entry Strategy</h5>
+                <h5>
+                  <Flag /> Entry Strategy
+                </h5>
                 <p>{analysis.entryStrategy}</p>
               </div>
             )}
 
             {analysis.riskAnalysis && (
               <div className="analysis-card risk">
-                <h5>⚠️ Risk Analysis</h5>
+                <h5>
+                  <WarningAmber /> Risk Analysis
+                </h5>
                 <p>{analysis.riskAnalysis}</p>
               </div>
             )}
 
             {analysis.positionSizing && (
               <div className="analysis-card position">
-                <h5>💰 Position Sizing</h5>
+                <h5>
+                  <AccountBalanceWallet /> Position Sizing
+                </h5>
                 <p>{analysis.positionSizing}</p>
               </div>
             )}
 
             {analysis.stopLoss && (
               <div className="analysis-card stop-loss">
-                <h5>🛡️ Stop Loss</h5>
+                <h5>
+                  <Shield /> Stop Loss
+                </h5>
                 <p>{analysis.stopLoss}</p>
               </div>
             )}
 
             {analysis.profitTargets && (
               <div className="analysis-card profit">
-                <h5>🎯 Profit Targets</h5>
+                <h5>
+                  <Toll /> Profit Targets
+                </h5>
                 <p>{analysis.profitTargets}</p>
               </div>
             )}
 
             {analysis.marketContext && (
               <div className="analysis-card market">
-                <h5>📊 Market Context</h5>
+                <h5>
+                  <ShowChart /> Market Context
+                </h5>
                 <p>{analysis.marketContext}</p>
               </div>
             )}
 
             {analysis.portfolioImpact && (
               <div className="analysis-card portfolio">
-                <h5>📈 Portfolio Impact</h5>
+                <h5>
+                  <PieChart /> Portfolio Impact
+                </h5>
                 <p>{analysis.portfolioImpact}</p>
               </div>
             )}
@@ -270,13 +305,14 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
 
           {/* Action Buttons */}
           <div className="advisor-actions">
-            <button 
+            <button
               className="copy-analysis-btn"
               onClick={() => navigator.clipboard.writeText(analysis.rawText)}
             >
-              📋 Copy Analysis
+              <ContentCopy />
+              <span>Copy Analysis</span>
             </button>
-            <button 
+            <button
               className="save-analysis-btn"
               onClick={() => {
                 const blob = new Blob([analysis.rawText], { type: 'text/plain' });
@@ -287,7 +323,8 @@ Be specific with price levels, percentages, and actionable advice. Consider tech
                 a.click();
               }}
             >
-              💾 Save Analysis
+              <Save />
+              <span>Save Analysis</span>
             </button>
           </div>
         </div>

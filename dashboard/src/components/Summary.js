@@ -20,64 +20,84 @@ const Summary = () => {
   const fmt = (n) => n >= 1000 ? (n / 1000).toFixed(2) + 'k' : n.toFixed(2);
 
   return (
-    <>
-      <div className="username">
-        <h6>Hi, User!</h6>
-        <hr className="divider" />
-      </div>
+    <div className="summary-page">
+      <header className="summary-hero">
+        <span className="hero-label">Portfolio overview</span>
+        <h1 className="hero-greeting">Hi, User!</h1>
 
-      <div className="section">
-        <span>
-          <p>Equity</p>
-        </span>
-
-        <div className="data">
-          <div className="first">
-            <h3>3.74k</h3>
-            <p>Margin available</p>
+        <div className="hero-portfolio">
+          <div className="hero-value">
+            <span className="hero-value-label">Current value</span>
+            <span className="hero-amount">{fmt(totalCurrent)}</span>
           </div>
-          <hr />
-
-          <div className="second">
-            <p>
-              Margins used <span>0</span>{" "}
-            </p>
-            <p>
-              Opening balance <span>3.74k</span>{" "}
-            </p>
+          <div className={`hero-pnl ${totalPnL >= 0 ? "positive" : "negative"}`}>
+            <span className="hero-pnl-label">Unrealised P&amp;L</span>
+            <span className="hero-pnl-amount">
+              {totalPnL >= 0 ? "+" : "-"}
+              {fmt(Math.abs(totalPnL))}
+            </span>
+            <span className="hero-pnl-pct">
+              {totalPnL >= 0 ? "+" : "-"}
+              {Math.abs(pnlPercent)}%
+            </span>
           </div>
         </div>
-        <hr className="divider" />
+      </header>
+
+      <div className="metric-grid">
+        <div className="metric-card metric-card--accent">
+          <span className="metric-label">Margin available</span>
+          <span className="metric-value">3.74k</span>
+        </div>
+        <div className="metric-card">
+          <span className="metric-label">Investment</span>
+          <span className="metric-value">{fmt(totalInvestment)}</span>
+        </div>
+        <div className="metric-card">
+          <span className="metric-label">Margins used</span>
+          <span className="metric-value">0</span>
+        </div>
+        <div className="metric-card">
+          <span className="metric-label">Opening balance</span>
+          <span className="metric-value">3.74k</span>
+        </div>
       </div>
 
-      <div className="section">
-        <span>
-          <p>Holdings ({allHoldings.length})</p>
-        </span>
-
-        <div className="data">
-          <div className="first">
-            <h3 className={totalPnL >= 0 ? "profit" : "loss"}>
-              {fmt(Math.abs(totalPnL))} <small>{totalPnL >= 0 ? '+' : '-'}{Math.abs(pnlPercent)}%</small>{" "}
-            </h3>
-            <p>P&L</p>
-          </div>
-          <hr />
-
-          <div className="second">
-            <p>
-              Current Value <span>{fmt(totalCurrent)}</span>{" "}
-            </p>
-            <p>
-              Investment <span>{fmt(totalInvestment)}</span>{" "}
-            </p>
-          </div>
+      <div className="section-card">
+        <div className="section-card-head">
+          <span>Holdings ({allHoldings.length})</span>
+          <span className={`pill ${totalPnL >= 0 ? "pill-green" : "pill-red"}`}>
+            {totalPnL >= 0 ? "+" : "-"}
+            {Math.abs(pnlPercent)}%
+          </span>
         </div>
-        <hr className="divider" />
+
+        {allHoldings.length > 0 ? (
+          <div className="holdings-list">
+            {allHoldings.map((stock, idx) => {
+              const pnl = (stock.price - stock.avg) * stock.qty;
+              return (
+                <div className="holding-row" key={idx}>
+                  <span className="holding-name">{stock.name}</span>
+                  <span className="holding-qty">{stock.qty}</span>
+                  <span className="holding-ltp">{stock.price.toFixed(2)}</span>
+                  <span
+                    className={`holding-pnl ${pnl >= 0 ? "positive" : "negative"}`}
+                  >
+                    {pnl >= 0 ? "+" : "-"}
+                    {Math.abs(pnl).toFixed(2)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="holdings-empty">No holdings yet.</div>
+        )}
       </div>
 
       <MarketSentimentAnalyzer holdings={allHoldings} watchlist={watchlist} />
-    </>
+    </div>
   );
 };
 

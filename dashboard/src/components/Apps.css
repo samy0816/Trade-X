@@ -1,43 +1,56 @@
 .apps-container {
-  padding: 20px;
-  max-width: 1200px;
+  padding: 4px;
+  max-width: 1160px;
   margin: 0 auto;
 }
 
 .apps-header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  color: white;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  margin-bottom: 28px;
+  padding: clamp(26px, 4vw, 40px);
+  background: linear-gradient(135deg, #0b1220 0%, #1e1b4b 60%, #312e81 100%);
+  border-radius: var(--radius);
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.apps-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(420px 240px at 88% -14%, rgba(129, 140, 248, 0.35), transparent 60%),
+    radial-gradient(300px 220px at 8% 110%, rgba(15, 157, 88, 0.20), transparent 60%);
+  pointer-events: none;
 }
 
 .apps-header h1 {
-  margin: 0 0 10px 0;
-  font-size: 28px;
+  position: relative;
+  margin: 0 0 10px;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .apps-header p {
+  position: relative;
   margin: 0;
-  font-size: 16px;
-  opacity: 0.9;
-  color: #e0e7ff;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.68);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .apps-container {
-    padding: 10px;
+    padding: 0;
   }
-  
+
   .apps-header h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
-  
+
   .apps-header p {
-    font-size: 14px;
+    font-size: 0.9rem;
   }
 }

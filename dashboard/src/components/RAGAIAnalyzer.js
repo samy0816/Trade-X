@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './RAGAIAnalyzer.css';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import {
+  AutoAwesome,
+  Insights,
+  Recommend,
+  WarningAmber,
+  Layers,
+} from '@mui/icons-material';
 
 // API Configuration
 const apiConfig = {
@@ -101,7 +108,9 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
     <div className="rag-ai-analyzer">
       <div className="rag-header">
         <div className="rag-title">
-         
+          <span className="rag-icon-badge">
+            <AutoAwesome />
+          </span>
           <div>
             <div className="title-text">Advanced Portfolio Analyzer</div>
             <div className="subtitle-text">Knowledge-enhanced AI with market intelligence</div>
@@ -159,7 +168,9 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
           {/* Market Insight */}
           {analysis.marketInsight && (
             <div className="analysis-section market-insight">
-              <h3>📊 Market Insight</h3>
+              <h3>
+                <Insights /> Market Insight
+              </h3>
               <div className="insight-content">
                 {analysis.marketInsight.split('\n').map((line, idx) => (
                   <p key={idx} className="insight-line">{line}</p>
@@ -171,7 +182,9 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
           {/* Strategic Recommendations */}
           {analysis.strategicRecommendations.length > 0 && (
             <div className="analysis-section strategic-recs">
-              <h3>🎯 Strategic Recommendations</h3>
+              <h3>
+                <Recommend /> Strategic Recommendations
+              </h3>
               <div className="recommendations-list">
                 {analysis.strategicRecommendations.map((rec, idx) => (
                   <div key={idx} className="recommendation-item">
@@ -186,7 +199,9 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
           {/* Risk Assessment */}
           {analysis.riskAssessment && (
             <div className="analysis-section risk-assessment">
-              <h3>⚠️ Risk Assessment</h3>
+              <h3>
+                <WarningAmber /> Risk Assessment
+              </h3>
               <div className="risk-content">
                 {analysis.riskAssessment.split('\n').map((line, idx) => (
                   <p key={idx} className="risk-line">{line}</p>
@@ -198,7 +213,9 @@ const RAGAIAnalyzer = ({ holdings, watchlist = [] }) => {
           {/* Sector Analysis */}
           {analysis.sectorAnalysis && (
             <div className="analysis-section sector-analysis">
-              <h3>🏭 Sector Analysis</h3>
+              <h3>
+                <Layers /> Sector Analysis
+              </h3>
               <div className="sector-content">
                 {analysis.sectorAnalysis.split('\n').map((line, idx) => (
                   <p key={idx} className="sector-line">{line}</p>

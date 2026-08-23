@@ -4,6 +4,10 @@ import axios from "axios";
 import './AIRecommendations.css';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3002'
+  : 'https://trade-x-iaaz.onrender.com';
+
 
 // Parse model output into { summary: string, recs: string[] }
 const parseModelOutput = (text) => {
@@ -57,12 +61,12 @@ const AIRecommendations = ({ holdings, watchlist = [] }) => {
     setRecommendations([]);
     setSummary("");
     try {
-  const res = await axios.post("https://trade-x-iaaz.onrender.com/ai/recommendations", { holdings, watchlist });
+      const res = await axios.post(`${API_BASE_URL}/ai/recommendations`, { holdings, watchlist });
       const parsed = parseModelOutput(res.data.recommendations || '');
       setSummary(parsed.summary);
       setRecommendations(parsed.recs);
     } catch (err) {
-      setError("Failed to fetch AI recommendations.");
+      setError(err.response?.data?.message || "Failed to fetch AI recommendations.");
     } finally {
       setLoading(false);
     }

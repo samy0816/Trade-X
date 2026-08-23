@@ -1,17 +1,18 @@
 .market-sentiment-analyzer {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  border-radius: 12px;
-  padding: 24px;
-  margin: 20px 0;
-  color: white;
-  box-shadow: 0 8px 32px rgba(30, 60, 114, 0.3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px;
+  margin: 22px 0;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
 }
 
 .sentiment-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .sentiment-title {
@@ -20,36 +21,58 @@
   gap: 12px;
 }
 
-.sentiment-icon {
-  font-size: 24px;
+.sentiment-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.sentiment-icon-badge svg {
+  width: 19px;
+  height: 19px;
 }
 
 .sentiment-title h3 {
-  margin: 0 0 4px 0;
-  font-size: 18px;
+  margin: 0 0 4px;
+  font-size: 1.05rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .sentiment-title p {
   margin: 0;
-  font-size: 14px;
-  opacity: 0.8;
-  color: #b3d9ff;
+  font-size: 0.84rem;
+  color: var(--ink-muted);
 }
 
 .refresh-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--ink-soft);
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+  transition: transform 0.16s ease, background 0.16s ease;
+}
+
+.refresh-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 .refresh-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--surface-3);
   transform: translateY(-1px);
 }
 
@@ -58,18 +81,29 @@
   cursor: not-allowed;
 }
 
+.refresh-btn .spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .sentiment-loading {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 40px 20px;
+  color: var(--ink-muted);
 }
 
 .pulse-loader {
-  width: 20px;
-  height: 20px;
-  background: #4facfe;
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
   border-radius: 50%;
   animation: pulse 1.5s ease-in-out infinite;
 }
@@ -86,33 +120,41 @@
 }
 
 .sentiment-error {
-  background: rgba(244, 67, 54, 0.2);
-  border: 1px solid rgba(244, 67, 54, 0.5);
-  padding: 16px;
-  border-radius: 8px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--red-soft);
+  border: 1px solid rgba(229, 72, 77, 0.24);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
   margin: 16px 0;
+  color: var(--red-deep);
+}
+
+.sentiment-error svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .sentiment-results {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .overall-sentiment {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
   padding: 20px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border);
 }
 
 .sentiment-gauge {
   position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  height: 60px;
-  border-radius: 30px;
+  background: var(--surface-3);
+  height: 56px;
+  border-radius: 28px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -121,7 +163,7 @@
 .gauge-fill {
   height: 100%;
   transition: width 1s ease-in-out;
-  border-radius: 30px;
+  border-radius: 28px;
 }
 
 .gauge-label {
@@ -133,35 +175,56 @@
   align-items: center;
   gap: 8px;
   font-weight: 700;
-  font-size: 16px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.sentiment-ico {
+  font-size: 17px;
+  display: inline-flex;
+}
+
+.sentiment-ico.is-up {
+  color: var(--green);
+}
+
+.sentiment-ico.is-down {
+  color: var(--red);
+}
+
+.sentiment-ico.is-neutral {
+  color: var(--accent);
 }
 
 .sentiment-emoji {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .sentiment-section {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
   padding: 20px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
 }
 
 .sentiment-section h4 {
-  margin: 0 0 16px 0;
-  font-size: 16px;
-  font-weight: 600;
+  margin: 0 0 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+.sentiment-section h4 svg {
+  font-size: 18px;
+  color: var(--accent);
+}
+
 .sentiment-section p {
   margin: 0;
-  line-height: 1.6;
-  opacity: 0.95;
+  line-height: 1.65;
+  color: var(--ink-soft);
 }
 
 .drivers-list {
@@ -173,44 +236,47 @@
 .driver-item {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 10px;
   padding: 8px 0;
+  color: var(--ink-soft);
 }
 
 .driver-bullet {
-  color: #4facfe;
-  font-weight: bold;
-  font-size: 16px;
-  margin-top: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 7px;
 }
 
 .recommendation {
-  border-left: 4px solid #4caf50;
-  background: rgba(76, 175, 80, 0.1);
+  border-left: 4px solid var(--green);
+  background: var(--green-soft);
 }
 
 .recommendation p {
-  font-size: 16px;
+  font-size: 0.95rem;
+  color: var(--green-deep);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .market-sentiment-analyzer {
-    padding: 16px;
+    padding: 18px;
   }
-  
+
   .sentiment-header {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
   }
-  
+
   .sentiment-title {
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start;
   }
-  
+
   .gauge-label {
-    font-size: 14px;
+    font-size: 0.88rem;
   }
 }

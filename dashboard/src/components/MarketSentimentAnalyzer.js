@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  Insights,
+  Refresh,
+  TrendingUp,
+  TrendingDown,
+  TrendingFlat,
+  Lightbulb,
+  ShowChart,
+  Key as KeyIcon,
+  ErrorOutline,
+} from '@mui/icons-material';
 import './MarketSentimentAnalyzer.css';
 
 // API Configuration
@@ -45,7 +56,7 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
       parseSentimentResponse(text);
       
     } catch (err) {
-      setError("Failed to fetch market sentiment.");
+      setError(err.response?.data?.message || "Failed to fetch market sentiment.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -111,9 +122,9 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
 
   const getSentimentIcon = (sentiment) => {
     switch (sentiment) {
-      case 'Bullish': return '📈';
-      case 'Bearish': return '📉';
-      default: return '📊';
+      case 'Bullish': return <TrendingUp className="sentiment-ico is-up" />;
+      case 'Bearish': return <TrendingDown className="sentiment-ico is-down" />;
+      default: return <TrendingFlat className="sentiment-ico is-neutral" />;
     }
   };
 
@@ -127,32 +138,36 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
     <div className="market-sentiment-analyzer">
       <div className="sentiment-header">
         <div className="sentiment-title">
-          <span className="sentiment-icon">🎯</span>
+          <span className="sentiment-icon-badge">
+            <Insights />
+          </span>
           <div>
-            <h3>Market Sentiment Analysis</h3>
+            <h3>Market Sentiment</h3>
             <p>AI-powered market mood assessment</p>
           </div>
         </div>
-        
-        <button 
-          className="refresh-btn" 
+
+        <button
+          className="refresh-btn"
           onClick={fetchMarketSentiment}
           disabled={loading}
         >
-          {loading ? '🔄' : '🔁'} Refresh
+          <Refresh className={loading ? 'spin' : ''} />
+          <span>{loading ? 'Refreshing' : 'Refresh'}</span>
         </button>
       </div>
 
       {loading && (
         <div className="sentiment-loading">
           <div className="pulse-loader"></div>
-          <span>Analyzing market sentiment...</span>
+          <span>Analyzing market sentiment…</span>
         </div>
       )}
 
       {error && (
         <div className="sentiment-error">
-          <span>❌ {error}</span>
+          <ErrorOutline />
+          <span>{error}</span>
         </div>
       )}
 
@@ -161,19 +176,17 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
           {/* Overall Sentiment */}
           <div className="overall-sentiment">
             <div className="sentiment-gauge">
-              <div 
-                className="gauge-fill" 
-                style={{ 
+              <div
+                className="gauge-fill"
+                style={{
                   width: `${sentiment.confidence}%`,
-                  backgroundColor: getSentimentColor(sentiment.overall)
+                  backgroundColor: getSentimentColor(sentiment.overall),
                 }}
               ></div>
               <div className="gauge-label">
-                <span className="sentiment-emoji">
-                  {getSentimentIcon(sentiment.overall)}
-                </span>
+                {getSentimentIcon(sentiment.overall)}
                 <span className="sentiment-text">
-                  {sentiment.overall} ({sentiment.confidence}%)
+                  {sentiment.overall} · {sentiment.confidence}%
                 </span>
               </div>
             </div>
@@ -182,11 +195,13 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
           {/* Key Drivers */}
           {sentiment.drivers.length > 0 && (
             <div className="sentiment-section">
-              <h4>🔑 Key Market Drivers</h4>
+              <h4>
+                <KeyIcon /> Key Market Drivers
+              </h4>
               <div className="drivers-list">
                 {sentiment.drivers.map((driver, idx) => (
                   <div key={idx} className="driver-item">
-                    <span className="driver-bullet">•</span>
+                    <span className="driver-bullet" />
                     <span>{driver}</span>
                   </div>
                 ))}
@@ -197,7 +212,9 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
           {/* Stock Specific Analysis */}
           {sentiment.stockSpecific && (
             <div className="sentiment-section">
-              <h4>📈 Stock-Specific Sentiment</h4>
+              <h4>
+                <ShowChart /> Stock-Specific Sentiment
+              </h4>
               <p>{sentiment.stockSpecific}</p>
             </div>
           )}
@@ -205,8 +222,12 @@ const MarketSentimentAnalyzer = ({ holdings, watchlist }) => {
           {/* Recommendation */}
           {sentiment.recommendation && (
             <div className="sentiment-section recommendation">
-              <h4>💡 Market Timing Recommendation</h4>
-              <p><strong>{sentiment.recommendation}</strong></p>
+              <h4>
+                <Lightbulb /> Market Timing
+              </h4>
+              <p>
+                <strong>{sentiment.recommendation}</strong>
+              </p>
             </div>
           )}
         </div>
