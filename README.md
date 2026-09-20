@@ -1,4 +1,4 @@
-# Trade-X 🚀
+# Trade-X 
 
 > **A Next-Generation AI-Powered Trading Platform**
 
@@ -10,21 +10,21 @@ An advanced full-stack trading platform inspired by modern fintech applications,
 
 ---
 
-## 🎯 **Key Features**
+##  **Key Features**
 
-### 🤖 **Advanced AI Capabilities**
+###  **Advanced AI Capabilities**
 - **RAG AI Analyzer**: Knowledge-enhanced portfolio analysis with structured recommendations
 - **Market Sentiment Analysis**: Real-time sentiment tracking with confidence scoring
 - **Smart Trade Advisor**: Individual stock analysis with buy/sell recommendations
 - **Intelligent Fallback System**: Ensures AI features work even during API limits
 
-### 💼 **Core Trading Features**
+###  **Core Trading Features**
 - **Complete Order Management**: Buy/Sell with real-time order tracking
 - **Portfolio Analytics**: Holdings, positions, P&L tracking
 - **Interactive Watchlist**: Monitor and analyze multiple stocks
 - **Funds Management**: Account balance and transaction history
 
-### 🎨 **Modern UI/UX**
+###  **Modern UI/UX**
 - **Glassmorphism Design**: Beautiful translucent interface elements
 - **Responsive Layout**: Optimized for desktop, tablet, and mobile
 - **Real-time Updates**: Live data synchronization
@@ -32,7 +32,7 @@ An advanced full-stack trading platform inspired by modern fintech applications,
 
 ---
 
-## 🏗️ **Architecture**
+##  **Architecture**
 
 ```
 📁 Trade-X/
@@ -55,7 +55,7 @@ An advanced full-stack trading platform inspired by modern fintech applications,
 
 ---
 
-## 🚀 **Live Demo**
+##  **Live Demo**
 
 | **Component** | **URL** | **Description** |
 |---------------|---------|-----------------|
@@ -65,7 +65,7 @@ An advanced full-stack trading platform inspired by modern fintech applications,
 
 ---
 
-## 🤖 **AI Features Deep Dive**
+##  **AI Features Deep Dive**
 
 ### **1. RAG AI Analyzer** 
 ```javascript
@@ -96,7 +96,7 @@ An advanced full-stack trading platform inspired by modern fintech applications,
 
 ---
 
-## 🛠️ **Local Development**
+##  **Local Development**
 
 ### **Prerequisites**
 - Node.js 16+ and npm
@@ -142,7 +142,7 @@ npm start
 
 ---
 
-## 📊 **API Endpoints**
+##  **API Endpoints**
 
 ### **Core Trading**
 - `GET /allHoldings` - Fetch user holdings
@@ -162,7 +162,7 @@ npm start
 
 ---
 
-## 🎨 **UI Components**
+##  **UI Components**
 
 ### **Advanced AI Components**
 - `RAGAIAnalyzer.js` - Knowledge-enhanced portfolio analysis
@@ -177,7 +177,7 @@ npm start
 
 ---
 
-## 🔒 **Security Features**
+##  **Security Features**
 
 - **Secure Authentication**: Passport.js with session management
 - **Data Validation**: Input sanitization and validation
@@ -187,7 +187,7 @@ npm start
 
 ---
 
-## 🌟 **Project Highlights**
+##  **Project Highlights**
 
 ### **Innovation**
 - First trading platform to implement RAG AI for portfolio analysis
@@ -217,7 +217,7 @@ npm start
 
 ---
 
-## 🤝 **Contributing**
+##  **Contributing**
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -227,19 +227,19 @@ npm start
 
 ---
 
-## 📄 **License**
+##  **License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## ⚠️ **Disclaimer**
+##  **Disclaimer**
 
 This project is for **educational and demonstration purposes only**. It is not affiliated with, endorsed by, or connected to Zerodha or any other trading platform. This is not financial advice, and users should consult with financial professionals before making investment decisions.
 
 ---
 
-## 👨‍💻 **Author**
+##  **Author**
 
 **Samarth Joshi**
 - GitHub: [@samy0816](https://github.com/samy0816)
@@ -247,7 +247,7 @@ This project is for **educational and demonstration purposes only**. It is not a
 
 ---
 
-## 🙏 **Acknowledgments**
+##  **Acknowledgments**
 
 - **Google Gemini API** for advanced AI capabilities
 - **Zerodha** for design inspiration
